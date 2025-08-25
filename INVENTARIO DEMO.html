@@ -1,0 +1,818 @@
+HECHO POR JUAN LOAEZA
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PLAYERAS MEXICANAS · Inventario</title>
+  <style>
+    :root{
+      --bg:#6c6c6c;
+      --panel:#4d4d4d;
+      --ink:#111;
+      --table:#1f2b3a;
+      --table-2:#23364a;
+      --table-3:#2e3e55;
+      --white:#fff;
+      --chip:#2b2b2b;
+      --radius:14px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background:var(--bg);
+      color:var(--white);
+    }
+    .app{max-width:1200px;margin:20px auto;padding:12px}
+    .topbar{display:flex;gap:12px;align-items:center;justify-content:space-between;margin-bottom:10px}
+    .brand{display:flex;align-items:center;gap:12px}
+    .brand h1{margin:0;font-weight:800;letter-spacing:.5px}
+    .chip{background:var(--chip);border-radius:999px;padding:6px 12px;font-size:12px;display:inline-flex;gap:8px;align-items:center}
+    .chip input{background:transparent;border:none;color:#fff;outline:none;width:170px}
+    .tabs{display:flex;gap:6px;flex-wrap:wrap}
+    .tab-btn{border:none;background:#2f2f2f;color:#fff;padding:10px 14px;border-radius:12px;cursor:pointer;font-weight:700;letter-spacing:.4px}
+    .tab-btn[aria-selected="true"]{background:black}
+    .card{background:var(--panel);border-radius:var(--radius);padding:14px;box-shadow:0 10px 18px rgba(0,0,0,.18)}
+    .screen{display:none}
+    .screen.active{display:block}
+    .row{display:flex;gap:16px;flex-wrap:wrap}
+    .grow{flex:1 1 360px}
+    .actions{display:flex;gap:8px;flex-wrap:wrap}
+    button.primary{background:#111;border:1px solid #000;color:#fff;padding:10px 14px;border-radius:10px;cursor:pointer;font-weight:700}
+    button.ghost{background:transparent;border:1px dashed #ddd;color:#fff;padding:10px 14px;border-radius:10px;cursor:pointer}
+    .table-wrap{overflow:auto;border-radius:12px;border:1px solid rgba(255,255,255,.12)}
+    table{border-collapse:separate;border-spacing:0;width:100%;min-width:880px}
+    thead th{background:var(--table);position:sticky;top:0;z-index:3}
+    th, td{padding:10px 8px;text-align:center;border-right:1px solid rgba(255,255,255,.08)}
+    th:first-child, td:first-child{text-align:left}
+    tr:nth-child(even) td{background:rgba(255,255,255,.03)}
+    tr:hover td{background:rgba(255,255,255,.05)}
+    tbody td input{
+      width:70px;max-width:100%;text-align:center;background:#0f1621;color:#fff;border:1px solid rgba(255,255,255,.12);
+      border-radius:8px;padding:8px 6px;outline:none
+    }
+    tbody td.logo, tbody td.color{background:var(--table-2);font-weight:700}
+    tfoot td{background:var(--table-3);font-weight:800;position:sticky;bottom:0}
+    .kpi{
+      display:grid;grid-template-columns: 1fr auto auto;gap:8px;align-items:center;
+      background:#263241;border-radius:12px;padding:10px;border:1px solid rgba(255,255,255,.12);
+      font-weight:700
+    }
+    .kpi input{width:110px;text-align:center;background:#0f1621;color:#fff;border:1px solid rgba(255,255,255,.12);border-radius:8px;padding:8px 6px}
+    .money{white-space:nowrap}
+    .subtle{opacity:.8}
+    .mini-title{font-weight:900;letter-spacing:.4px;margin:4px 0 8px 0}
+    .portada{display:grid;place-items:center;height:60vh;text-align:center;background:linear-gradient(180deg, #6c6c6c 0, #595959 100%);border-radius:16px}
+    .portada h2{font-size:64px;margin:0 0 10px 0;letter-spacing:4px}
+    .portada h3{font-size:110px;margin:0;font-weight:900;text-shadow:2px 4px 0 rgba(0,0,0,.25)}
+    .note{font-size:12px;opacity:.85}
+    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    @media (max-width:920px){
+      .grid-2{grid-template-columns:1fr}
+      .portada h2{font-size:44px}
+      .portada h3{font-size:72px}
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="topbar">
+      <div class="brand">
+        <h1>PLAYERAS MEXICANAS</h1>
+        <span class="chip">ENCARGADA:&nbsp;<input id="encargada" value="FANY PUC" /></span>
+      </div>
+      <div class="chip">Fecha</div>
+      <input id="fecha" type="date" class="input"/>
+    </div>
+
+    <div class="tabs" role="tablist" aria-label="Pestañas">
+      <button class="tab-btn" role="tab" aria-selected="true" data-tab="portada">Portada</button>
+      <button class="tab-btn" role="tab" aria-selected="false" data-tab="existencias">Existencias</button>
+      <button class="tab-btn" role="tab" aria-selected="false" data-tab="pedido">Pedido</button>
+      <button class="tab-btn" role="tab" aria-selected="false" data-tab="productos">Productos</button>
+    </div>
+
+    <!-- PORTADA -->
+    <section id="portada" class="screen active">
+      <div class="card portada">
+        <div>
+          <h2><span class="subtle">PLAYERAS MEXICANAS</span></h2>
+          <h3>MAREBLUE</h3>
+          <p class="note">Edita libremente; los cálculos se actualizan solos y todo se guarda en tu navegador.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- EXISTENCIAS (STOCK) -->
+    <section id="existencias" class="screen">
+      <div class="row">
+        <div class="grow card">
+          <div class="table-wrap">
+            <table id="tabla-stock">
+              <thead>
+                <tr>
+                  <th colspan="2">CABALLERO IMPORTADO</th>
+                  <th>S<br><span class="subtle">STK</span></th>
+                  <th>M<br><span class="subtle">STK</span></th>
+                  <th>L<br><span class="subtle">STK</span></th>
+                  <th>XL<br><span class="subtle">STK</span></th>
+                  <th>XXL<br><span class="subtle">STK</span></th>
+                  <th>TOTAL</th>
+                </tr>
+                <tr>
+                  <th>LOGO</th><th>COLOR</th><th colspan="5"></th><th></th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="2">TOTALES</td>
+                  <td id="sumS_stock">0</td>
+                  <td id="sumM_stock">0</td>
+                  <td id="sumL_stock">0</td>
+                  <td id="sumXL_stock">0</td>
+                  <td id="sumXXL_stock">0</td>
+                  <td id="grand_stock">0</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+          <div class="row" style="margin-top:12px">
+            <div class="grow kpi">
+              <div>PZAS&nbsp;<strong>S–XL</strong></div>
+              <div id="countSXL_stock">0</div>
+              <div class="money"> $ <span id="totalSXL_stock">-</span></div>
+            </div>
+            <div class="grow kpi">
+              <div>PZAS&nbsp;<strong>XXL</strong></div>
+              <div id="countXXL_stock">0</div>
+              <div class="money"> $ <span id="totalXXL_stock">-</span></div>
+            </div>
+          </div>
+          <div class="actions" style="margin-top:12px">
+            <button class="ghost" id="export-stock">Exportar CSV</button>
+            <button class="ghost" id="limpiar-stock">Limpiar</button>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- PEDIDO -->
+    <section id="pedido" class="screen">
+      <div class="row">
+        <div class="grow card">
+          <div class="table-wrap">
+            <table id="tabla-pedido">
+              <thead>
+                <tr>
+                  <th colspan="2">CABALLERO IMPORTADO</th>
+                  <th>S<br><span class="subtle">PED</span></th>
+                  <th>M<br><span class="subtle">PED</span></th>
+                  <th>L<br><span class="subtle">PED</span></th>
+                  <th>XL<br><span class="subtle">PED</span></th>
+                  <th>XXL<br><span class="subtle">PED</span></th>
+                  <th>TOTAL</th>
+                </tr>
+                <tr>
+                  <th>LOGO</th><th>COLOR</th><th colspan="5"></th><th></th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="2">TOTALES</td>
+                  <td id="sumS_pedido">0</td>
+                  <td id="sumM_pedido">0</td>
+                  <td id="sumL_pedido">0</td>
+                  <td id="sumXL_pedido">0</td>
+                  <td id="sumXXL_pedido">0</td>
+                  <td id="grand_pedido">0</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+
+          <div class="grid-2" style="margin-top:12px">
+            <div class="card">
+              <div class="mini-title">Importado</div>
+              <div class="row">
+                <div class="grow">
+                  <div class="kpi">
+                    <div>PEDIDO <input id="pedidoFecha" type="date" /></div>
+                    <input id="pedidoSXL" type="number" min="0" step="1" value="0" />
+                    <input id="pedidoXXL" type="number" min="0" step="1" value="0" />
+                  </div>
+                </div>
+              </div>
+              <div class="row" style="margin-top:10px">
+                <div class="grow">
+                  <div class="kpi">
+                    <div>RECIBIDO <input id="recibidoFecha" type="date" /></div>
+                    <input id="recibidoSXL" type="number" min="0" step="1" value="0" />
+                    <input id="recibidoXXL" type="number" min="0" step="1" value="0" />
+                  </div>
+                </div>
+              </div>
+              <div class="row" style="margin-top:10px">
+                <div class="grow">
+                  <div class="kpi">
+                    <div>DIFERENCIA</div>
+                    <div id="diffSXL" aria-live="polite">0</div>
+                    <div id="diffXXL" aria-live="polite">0</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="mini-title">Totales del pedido</div>
+              <div class="row">
+                <div class="grow kpi">
+                  <div>PZAS <strong>S–XL</strong></div>
+                  <div id="countSXL_pedido">0</div>
+                  <div class="money">$ <span id="importeSXL">0.00</span></div>
+                </div>
+                <div class="grow kpi">
+                  <div>PZAS <strong>XXL</strong></div>
+                  <div id="countXXL_pedido">0</div>
+                  <div class="money">$ <span id="importeXXL">0.00</span></div>
+                </div>
+              </div>
+              <div class="row" style="margin-top:10px">
+                <div class="grow kpi">
+                  <div class="subtle">Precio unitario S–XL</div>
+                  <input id="precioSXL" type="number" min="0" step="0.01" value="0" />
+                  <div class="subtle">— editables</div>
+                </div>
+                <div class="grow kpi">
+                  <div class="subtle">Precio unitario XXL</div>
+                  <input id="precioXXL" type="number" min="0" step="0.01" value="0" />
+                  <div class="subtle">— editables</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="actions" style="margin-top:12px">
+            <button class="ghost" id="export-pedido">Exportar CSV</button>
+            <button class="ghost" id="limpiar-pedido">Limpiar</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRODUCTOS -->
+    <section id="productos" class="screen">
+      <div class="row">
+        <div class="grow card">
+          <div class="row" style="margin-bottom:8px">
+            <div class="grow">
+              <input id="filtroProductos" placeholder="Buscar por logo o color..."
+                    style="width:100%;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,.2);background:#0f1621;color:#fff;outline:none">
+            </div>
+            <button class="ghost" id="btnLimpiarFiltro">Limpiar</button>
+            <button class="primary" id="btnNuevaTabla">Nueva tabla</button>
+          </div>
+
+          <!-- Contenedor dinámico de tablas -->
+          <div id="productos-sections"></div>
+
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    /*********************
+     * Estado y datos
+     *********************/
+    const key = "playa13-inventario-v2";
+    const state = JSON.parse(localStorage.getItem(key) || "{}");
+
+    const defaultCatalog = [
+      { logo:"FLORAL SKULL", color:"OXFORD" },
+      { logo:"MELTING SKULL", color:"NEGRO" },
+      { logo:"PIRATA SKULL", color:"NEGRO" },
+      { logo:"ROSE GIRL", color:"NEGRO" },
+      { logo:"DIA DE MUERTOS", color:"NEGRO" },
+      { logo:"MASCARA", color:"JASPE" },
+      { logo:"IGUANA NOTHER", color:"BLANCO" },
+    ];
+
+    // Catálogo base usado por Existencias y Pedido (no cambia con las tablas de Productos)
+    if (!state.catalog) state.catalog = defaultCatalog.slice();
+    let productosBase = state.catalog;
+
+    // Secciones (tablas) de Productos (persistentes)
+    const defaultProductSections = [
+      { key: "productosA", title: "ANAQUEL A", actions: true  },
+      { key: "productosB", title: "ANAQUEL B", actions: true  },
+      { key: "productosC", title: "ANAQUEL C", actions: true  },
+    ];
+    if (!state.productSections) state.productSections = defaultProductSections;
+    let PRODUCT_SECTIONS = state.productSections;
+
+    // Catálogos por sección (cada tabla tiene su propia lista de productos)
+    if (!state.sectionCatalogs) state.sectionCatalogs = {};
+    PRODUCT_SECTIONS.forEach(sec => {
+      if (!state.sectionCatalogs[sec.key]) {
+        // Inicialmente clona el catálogo base (puedes dejarlo vacío si prefieres)
+        state.sectionCatalogs[sec.key] = productosBase.map(p => ({...p}));
+      }
+    });
+
+    const tallas = ["S","M","L","XL","XXL"];
+
+    function todayISO(){
+      const d = new Date(); const off = d.getTimezoneOffset();
+      const d2 = new Date(d.getTime() - off*60*1000);
+      return d2.toISOString().slice(0,10);
+    }
+
+    /*********************
+     * Tabs
+     *********************/
+    document.querySelectorAll(".tab-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const target = btn.dataset.tab;
+        document.querySelectorAll(".tab-btn").forEach(b => b.setAttribute("aria-selected","false"));
+        btn.setAttribute("aria-selected","true");
+        document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+        const scr = document.getElementById(target);
+        if (scr) scr.classList.add("active");
+      });
+    });
+
+    /*********************
+     * Encabezado
+     *********************/
+    const encargada = document.getElementById("encargada");
+    const fecha = document.getElementById("fecha");
+    encargada.value = state.encargada || encargada.value;
+    fecha.value = state.fecha || todayISO();
+    encargada.addEventListener("input", saveGeneral);
+    fecha.addEventListener("input", saveGeneral);
+    function saveGeneral(){
+      state.encargada = encargada.value;
+      state.fecha = fecha.value;
+      persist();
+    }
+
+    /*********************
+     * Inicialización de cantidades por sección
+     *********************/
+    if(!state.stock) state.stock = {};
+    if(!state.pedido) state.pedido = {};
+    PRODUCT_SECTIONS.forEach(sec => { if (!state[sec.key]) state[sec.key] = {}; });
+
+    // Inicializa Existencias/Pedido basados en catálogo base
+    productosBase.forEach((_,i)=>{
+      if(!state.stock[i])   state.stock[i]   = {S:0,M:0,L:0,XL:0,XXL:0};
+      if(!state.pedido[i])  state.pedido[i]  = {S:0,M:0,L:0,XL:0,XXL:0};
+    });
+
+    // Inicializa cantidades para cada sección según su propio catálogo
+    PRODUCT_SECTIONS.forEach(sec=>{
+      const cat = state.sectionCatalogs[sec.key];
+      cat.forEach((_,i)=>{
+        if(!state[sec.key][i]) state[sec.key][i] = {S:0,M:0,L:0,XL:0,XXL:0};
+      });
+    });
+
+    /*********************
+     * Generadores UI
+     *********************/
+    function tableHTML(title, secKey, showActions){
+      // Formulario local "Agregar" debajo de la tabla, que afecta SOLO a esta sección
+      return `
+        <div class="row" style="margin-top:16px">
+          <div class="grow card">
+            <div class="table-wrap">
+              <table data-section="${secKey}">
+                <thead>
+                  <tr>
+                    <th colspan="2">${title}</th>
+                    <th>S</th><th>M</th><th>L</th><th>XL</th><th>XXL</th><th>TOTAL</th>${showActions?'<th>Acciones</th>':''}
+                  </tr>
+                  <tr>
+                    <th>LOGO</th>
+                    <th>COLOR</th>
+                    <th colspan="5"></th>
+                    <th></th>
+                    ${showActions?'<th></th>':''}
+                  </tr>
+                </thead>
+                <tbody></tbody>
+                <tfoot>
+                  <tr>
+                    <td colspan="2">TOTALES</td>
+                    <td data-sum-for="${secKey}-S">0</td>
+                    <td data-sum-for="${secKey}-M">0</td>
+                    <td data-sum-for="${secKey}-L">0</td>
+                    <td data-sum-for="${secKey}-XL">0</td>
+                    <td data-sum-for="${secKey}-XXL">0</td>
+                    <td data-grand-for="${secKey}">0</td>
+                    ${showActions?'<td></td>':''}
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+            <div class="actions" style="margin-top:12px">
+              <button class="ghost" data-action="export" data-section="${secKey}">Exportar CSV</button>
+              <button class="ghost" data-action="clear"  data-section="${secKey}">Limpiar</button>
+            </div>
+            <div class="card" style="margin-top:12px">
+              <div class="row" style="gap:8px;align-items:center">
+                <input data-input="logo"  data-section="${secKey}" placeholder="Logo"  style="flex:1;min-width:180px;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,.2);background:#0f1621;color:#fff;outline:none">
+                <input data-input="color" data-section="${secKey}" placeholder="Color" style="flex:1;min-width:140px;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,.2);background:#0f1621;color:#fff;outline:none">
+                <button class="primary" data-action="add" data-section="${secKey}">Agregar</button>
+              </div>
+              <div class="note" style="margin-top:6px">Este formulario agrega productos <strong>solo</strong> a “${title}”.</div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function buildProductSections(){
+      const host = document.getElementById("productos-sections");
+      host.innerHTML = PRODUCT_SECTIONS.map(sec => tableHTML(sec.title, sec.key, !!sec.actions)).join("");
+    }
+
+    /*********************
+     * Helpers
+     *********************/
+    function persist(){ 
+      state.productSections = PRODUCT_SECTIONS;
+      localStorage.setItem(key, JSON.stringify(state)); 
+    }
+    function normalizar(txt){ return (txt || "").toString().trim().toLowerCase(); }
+    const ABC = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    function nextLetter(n){
+      let s=""; n=Math.max(1,n);
+      while(n>0){ n--; s = ABC[n%26]+s; n = Math.floor(n/26); }
+      return s;
+    }
+    function nextSectionKey(){
+      let n = PRODUCT_SECTIONS.length + 1;
+      const existing = new Set(PRODUCT_SECTIONS.map(s=>s.key));
+      while(existing.has(`productos${n===1?"A":String.fromCharCode(64+n)}`)) n++;
+      // pero usaremos un simple consecutivo con sufijo letra:
+      return `productos${String.fromCharCode(64+n)}`; // productosD, productosE, ...
+    }
+
+    function getCatalogFor(tipo){
+      if (tipo === "stock" || tipo === "pedido") return productosBase;
+      return state.sectionCatalogs[tipo] || [];
+    }
+
+    function makeRow(tipo, idx){
+      const cat = getCatalogFor(tipo);
+      const p = cat[idx];
+      const valores = (state[tipo] && state[tipo][idx]) ? state[tipo][idx] : {S:0,M:0,L:0,XL:0,XXL:0};
+      const tr = document.createElement("tr");
+
+      const tdLogo = document.createElement("td"); tdLogo.textContent = p?.logo ?? "";  tdLogo.className="logo";
+      const tdColor= document.createElement("td"); tdColor.textContent = p?.color ?? ""; tdColor.className="color";
+      tr.append(tdLogo, tdColor);
+
+      ["S","M","L","XL","XXL"].forEach(t => {
+        const td = document.createElement("td");
+        const input = document.createElement("input");
+        input.type = "number"; input.min = "0"; input.step = "1";
+        input.value = Number(valores[t] || 0);
+        input.addEventListener("input", () => {
+          if(!state[tipo]) state[tipo] = {};
+          if(!state[tipo][idx]) state[tipo][idx] = {S:0,M:0,L:0,XL:0,XXL:0};
+          state[tipo][idx][t] = Number(input.value||0);
+          persist(); recalc();
+        });
+        td.appendChild(input);
+        tr.appendChild(td);
+      });
+
+      const tdTotal = document.createElement("td");
+      tdTotal.textContent = "0";
+      tdTotal.dataset.totalFor = `${tipo}-${idx}`;
+      tr.appendChild(tdTotal);
+
+      const secCfg = PRODUCT_SECTIONS.find(s => s.key === tipo);
+      if (secCfg?.actions) {
+        const tdAcc = document.createElement("td");
+        const btnDel = document.createElement("button");
+        btnDel.textContent = "Eliminar";
+        btnDel.className = "ghost";
+        btnDel.addEventListener("click", () => removeProducto(tipo, idx));
+        tdAcc.appendChild(btnDel);
+        tr.appendChild(tdAcc);
+      }
+
+      return tr;
+    }
+
+    /*********************
+     * Render principal
+     *********************/
+    function render(){
+      buildProductSections();
+
+      // Existencias / Pedido (usan catálogo base)
+      const tablaStockBody  = document.querySelector("#tabla-stock tbody");
+      const tablaPedidoBody = document.querySelector("#tabla-pedido tbody");
+      tablaStockBody.innerHTML = "";
+      tablaPedidoBody.innerHTML = "";
+      productosBase.forEach((_, idx) => {
+        tablaStockBody.appendChild(makeRow("stock", idx));
+        tablaPedidoBody.appendChild(makeRow("pedido", idx));
+      });
+
+      // Tablas de Productos (cada una con su propio catálogo)
+      PRODUCT_SECTIONS.forEach(sec => {
+        const tbody = document.querySelector(`table[data-section="${sec.key}"] tbody`);
+        tbody.innerHTML = "";
+        const cat = state.sectionCatalogs[sec.key];
+        cat.forEach((_, idx) => tbody.appendChild(makeRow(sec.key, idx)));
+      });
+
+      // Semilla de existencias base (si la usabas)
+      if(!state._seeded){
+        const ejemplo = [
+          {S:4,M:3,L:5,XL:4,XXL:2},
+          {S:6,M:7,L:7,XL:6,XXL:3},
+          {S:5,M:7,L:7,XL:7,XXL:3},
+          {S:5,M:6,L:5,XL:6,XXL:2},
+          {S:4,M:4,L:4,XL:6,XXL:2},
+          {S:4,M:5,L:3,XL:4,XXL:2},
+          {S:5,M:5,L:5,XL:4,XXL:3},
+        ];
+        ejemplo.forEach((row,i)=> state.stock[i] = {...row});
+        state._seeded = true; persist(); render(); return;
+      }
+
+      // Inputs varios
+      document.getElementById("precioSXL").value   = state.precioSXL ?? 0;
+      document.getElementById("precioXXL").value   = state.precioXXL ?? 0;
+      document.getElementById("pedidoFecha").value = state.pedidoFecha || "";
+      document.getElementById("recibidoFecha").value = state.recibidoFecha || "";
+      document.getElementById("pedidoSXL").value   = state.pedidoSXL ?? 0;
+      document.getElementById("pedidoXXL").value   = state.pedidoXXL ?? 0;
+      document.getElementById("recibidoSXL").value = state.recibidoSXL ?? 0;
+      document.getElementById("recibidoXXL").value = state.recibidoXXL ?? 0;
+
+      recalc();
+      if (typeof aplicarFiltroProductos === "function") aplicarFiltroProductos();
+    }
+
+    /*********************
+     * Re-cálculos
+     *********************/
+    function recalc(){
+      // STOCK (base)
+      let sumColsStock = {S:0,M:0,L:0,XL:0,XXL:0};
+      let grandStock = 0;
+      productosBase.forEach((_,idx)=>{
+        const row = state.stock[idx] || {};
+        const rowTotal = tallas.reduce((acc,t)=>acc + Number(row[t]||0), 0);
+        grandStock += rowTotal;
+        tallas.forEach(t => sumColsStock[t]+= Number(row[t]||0));
+        const td = document.querySelector(`[data-total-for="stock-${idx}"]`);
+        if(td) td.textContent = rowTotal;
+      });
+      document.getElementById("sumS_stock").textContent = sumColsStock.S;
+      document.getElementById("sumM_stock").textContent = sumColsStock.M;
+      document.getElementById("sumL_stock").textContent = sumColsStock.L;
+      document.getElementById("sumXL_stock").textContent = sumColsStock.XL;
+      document.getElementById("sumXXL_stock").textContent = sumColsStock.XXL;
+      document.getElementById("grand_stock").textContent = grandStock;
+      document.getElementById("countSXL_stock").textContent = sumColsStock.S + sumColsStock.M + sumColsStock.L + sumColsStock.XL;
+      document.getElementById("countXXL_stock").textContent = sumColsStock.XXL;
+      document.getElementById("totalSXL_stock").textContent = "-";
+      document.getElementById("totalXXL_stock").textContent = "-";
+
+      // PEDIDO (base)
+      let sumColsPedido = {S:0,M:0,L:0,XL:0,XXL:0};
+      let grandPedido = 0;
+      productosBase.forEach((_,idx)=>{
+        const row = state.pedido[idx] || {};
+        const rowTotal = tallas.reduce((acc,t)=>acc + Number(row[t]||0), 0);
+        grandPedido += rowTotal;
+        tallas.forEach(t => sumColsPedido[t]+= Number(row[t]||0));
+        const td = document.querySelector(`[data-total-for="pedido-${idx}"]`);
+        if(td) td.textContent = rowTotal;
+      });
+      document.getElementById("sumS_pedido").textContent = sumColsPedido.S;
+      document.getElementById("sumM_pedido").textContent = sumColsPedido.M;
+      document.getElementById("sumL_pedido").textContent = sumColsPedido.L;
+      document.getElementById("sumXL_pedido").textContent = sumColsPedido.XL;
+      document.getElementById("sumXXL_pedido").textContent = sumColsPedido.XXL;
+      document.getElementById("grand_pedido").textContent = grandPedido;
+
+      const piezasSXL = sumColsPedido.S + sumColsPedido.M + sumColsPedido.L + sumColsPedido.XL;
+      const piezasXXL = sumColsPedido.XXL;
+      document.getElementById("countSXL_pedido").textContent = piezasSXL;
+      document.getElementById("countXXL_pedido").textContent = piezasXXL;
+
+      const precioSXL = Number(state.precioSXL || 0);
+      const precioXXL = Number(state.precioXXL || 0);
+      document.getElementById("importeSXL").textContent = (piezasSXL * precioSXL).toFixed(2);
+      document.getElementById("importeXXL").textContent = (piezasXXL * precioXXL).toFixed(2);
+
+      const dSXL = Number(state.pedidoSXL||0) - Number(state.recibidoSXL||0);
+      const dXXL = Number(state.pedidoXXL||0) - Number(state.recibidoXXL||0);
+      document.getElementById("diffSXL").textContent = dSXL;
+      document.getElementById("diffXXL").textContent = dXXL;
+
+      // PRODUCT SECTIONS (cada una con su propio catálogo)
+      PRODUCT_SECTIONS.forEach(sec => {
+        const sums = {S:0,M:0,L:0,XL:0,XXL:0};
+        let grand = 0;
+        const cat = state.sectionCatalogs[sec.key];
+        cat.forEach((_, idx) => {
+          const row = state[sec.key][idx] || {};
+          const rowTotal = tallas.reduce((acc,t)=> acc + Number(row[t]||0), 0);
+          grand += rowTotal;
+          tallas.forEach(t => sums[t] += Number(row[t]||0));
+          const td = document.querySelector(`[data-total-for="${sec.key}-${idx}"]`);
+          if (td) td.textContent = rowTotal;
+        });
+        const root = document;
+        root.querySelector(`[data-sum-for="${sec.key}-S"]`).textContent  = sums.S;
+        root.querySelector(`[data-sum-for="${sec.key}-M"]`).textContent  = sums.M;
+        root.querySelector(`[data-sum-for="${sec.key}-L"]`).textContent  = sums.L;
+        root.querySelector(`[data-sum-for="${sec.key}-XL"]`).textContent = sums.XL;
+        root.querySelector(`[data-sum-for="${sec.key}-XXL"]`).textContent= sums.XXL;
+        root.querySelector(`[data-grand-for="${sec.key}"]`).textContent  = grand;
+      });
+    }
+
+    /*********************
+     * Export / Limpiar (delegación)
+     *********************/
+    function exportCSV(tipo){
+      const encabezada = state.encargada || "";
+      const fechaSel = state.fecha || "";
+      const rows = [];
+      rows.push(["ENCARGADA", encabezada]);
+      rows.push(["FECHA", fechaSel]);
+      rows.push([]); // línea en blanco
+      rows.push(["LOGO","COLOR","S","M","L","XL","XXL","TOTAL"]);
+
+      const cat = getCatalogFor(tipo);
+
+      cat.forEach((p,i)=>{
+        const data = (tipo === "stock" || tipo === "pedido") ? state[tipo][i] : (state[tipo]?.[i] || {});
+        const total = tallas.reduce((a,t)=>a + Number(data[t]||0),0);
+        rows.push([p.logo,p.color,data.S||0,data.M||0,data.L||0,data.XL||0,data.XXL||0,total]);
+      });
+
+      const blob = new Blob([rows.map(r => r.join(",")).join("\n")], {type:"text/csv;charset=utf-8;"});
+      const a = document.createElement("a");
+      const url = URL.createObjectURL(blob);
+      a.href = url;
+
+      // Nombre dinámico
+      let filename = tipo;
+      if (tipo === "stock") filename = "stock_existencias";
+      else if (tipo === "pedido") filename = "pedido";
+      else {
+        const sec = PRODUCT_SECTIONS.find(s=>s.key===tipo);
+        filename = sec ? sec.title.replace(/\s+/g,"_").toLowerCase() : tipo;
+      }
+
+      a.download = `${filename}.csv`;
+      a.click();
+      setTimeout(()=>URL.revokeObjectURL(url), 2000);
+    }
+
+    document.getElementById("export-stock").addEventListener("click", ()=>exportCSV("stock"));
+    document.getElementById("export-pedido").addEventListener("click", ()=>exportCSV("pedido"));
+
+    document.getElementById("limpiar-stock").addEventListener("click", ()=>{
+      productosBase.forEach((_,i)=> state.stock[i] = {S:0,M:0,L:0,XL:0,XXL:0});
+      persist(); render();
+    });
+    document.getElementById("limpiar-pedido").addEventListener("click", ()=>{
+      productosBase.forEach((_,i)=> state.pedido[i] = {S:0,M:0,L:0,XL:0,XXL:0});
+      persist(); render();
+    });
+
+    // Delegación: export/clear/add por sección
+    document.getElementById("productos-sections").addEventListener("click", (e)=>{
+      const btn = e.target.closest("button[data-action]");
+      if(!btn) return;
+      const secKey = btn.getAttribute("data-section");
+      const action = btn.getAttribute("data-action");
+
+      if (action === "export") {
+        exportCSV(secKey);
+
+      } else if (action === "clear") {
+        const cat = state.sectionCatalogs[secKey];
+        cat.forEach((_,i)=> state[secKey][i] = {S:0,M:0,L:0,XL:0,XXL:0});
+        persist(); render();
+
+      } else if (action === "add") {
+        // Agregar SOLO a esta tabla
+        const logoInput  = document.querySelector(`input[data-input="logo"][data-section="${secKey}"]`);
+        const colorInput = document.querySelector(`input[data-input="color"][data-section="${secKey}"]`);
+        const logo  = (logoInput?.value || "").trim();
+        const color = (colorInput?.value || "").trim();
+        addProductoToSection(secKey, logo, color);
+        if (logoInput)  logoInput.value = "";
+        if (colorInput) colorInput.value = "";
+        logoInput?.focus();
+      }
+    });
+
+    /*********************
+     * Agregar / Eliminar producto (por sección)
+     *********************/
+    function addProductoToSection(secKey, logo, color){
+      if (!logo || !color) return;
+      const upLogo  = logo.toUpperCase();
+      const upColor = color.toUpperCase();
+      const cat = state.sectionCatalogs[secKey];
+
+      if (cat.some(p => p.logo === upLogo && p.color === upColor)) {
+        alert("Ese producto ya existe en esta tabla.");
+        return;
+      }
+
+      cat.push({ logo: upLogo, color: upColor });
+
+      const i = cat.length - 1;
+      if(!state[secKey]) state[secKey] = {};
+      state[secKey][i] = {S:0,M:0,L:0,XL:0,XXL:0};
+
+      persist(); render();
+    }
+
+    function removeProducto(secKey, index){
+      const cat = state.sectionCatalogs[secKey] || [];
+      const p = cat[index];
+      const nombre = p ? `${p.logo} (${p.color})` : `fila ${index+1}`;
+      if (!confirm(`¿Eliminar el producto ${nombre} de esta tabla?`)) return;
+
+      cat.splice(index, 1);
+
+      // Reindexar cantidades de esa sección
+      const nuevo = {};
+      cat.forEach((_, i) => {
+        nuevo[i] = (state[secKey][i] || { S:0,M:0,L:0,XL:0,XXL:0 });
+      });
+      state[secKey] = nuevo;
+
+      persist(); render();
+    }
+
+    /*********************
+     * Filtro Productos
+     *********************/
+    function aplicarFiltroProductos(){
+      const q = normalizar(document.getElementById("filtroProductos").value);
+      document.querySelectorAll('#productos-sections table tbody tr').forEach(tr => {
+        const logo  = normalizar(tr.children[0]?.textContent);
+        const color = normalizar(tr.children[1]?.textContent);
+        const match = !q || logo.includes(q) || color.includes(q);
+        tr.style.display = match ? "" : "none";
+      });
+    }
+
+    document.getElementById("filtroProductos").addEventListener("input", aplicarFiltroProductos);
+    document.getElementById("btnLimpiarFiltro").addEventListener("click", ()=>{
+      const input = document.getElementById("filtroProductos");
+      input.value = "";
+      aplicarFiltroProductos();
+      input.focus();
+    });
+
+    /*********************
+     * Nueva tabla dinámica
+     *********************/
+    function addNewSection(){
+      const nextIndex = PRODUCT_SECTIONS.length + 1;
+      const letter = nextLetter(nextIndex); // A, B, C, D...
+      const key = `productos${letter}`;     // productosD, productosE...
+
+      const newSec = { key, title: `CATÁLOGO ${letter}`, actions: true };
+      PRODUCT_SECTIONS.push(newSec);
+
+      // Catálogo propio (arranca vacío o clon del base; aquí vacío)
+      state.sectionCatalogs[key] = [];
+      state[key] = {};
+
+      persist();
+      render();
+    }
+
+    document.getElementById("btnNuevaTabla").addEventListener("click", addNewSection);
+
+    /*********************
+     * Inicializar
+     *********************/
+    render();
+  </script>
+</body>
+</html>
